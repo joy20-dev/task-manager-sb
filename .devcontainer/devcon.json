@@ -1,0 +1,11 @@
+{
+  "name": "Java 21 Dev",
+  "image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/maven:1": {
+      "version": "latest"
+    }
+  },
+  "forwardPorts": [8080],
+  "postCreateCommand": "mvn clean install"
+}
