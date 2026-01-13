@@ -4,8 +4,9 @@ import java.beans.BeanProperty;
 
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -14,8 +15,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.http.SessionCreationPolicy;
+
+import com.JoyBoy.ToDo.Filter.JwtAuthFilter;
 import com.JoyBoy.ToDo.Models.User;
 import com.JoyBoy.ToDo.service.CustomUserDetailsService;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -36,27 +41,27 @@ public class SecurityConfig{
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
+    @Autowired
+    private JwtAuthFilter jwtFilter;
 
      @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception{
             http
-                .cors(Customizer.withDefaults())
+                .cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/favicon.ico").permitAll()
-                    .requestMatchers("/","/api/register","/register.html","/tasks","/login","/register","/css/**","/js/**","/h2-console/**","/h2-console").permitAll()
+                    .requestMatchers("/","/api/auth/**","/register.html","/css/**","/js/**","/h2-console/**","/h2-console").permitAll()
                     .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/tasks")
-                    .permitAll()
-                )
+                
                 .logout(logout ->logout
                     .logoutSuccessUrl("/login?logout")
                     .permitAll()
                 )
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
-                .csrf(csrf -> csrf.disable());
+                .csrf(csrf -> csrf.disable())
+                .addFilterBefore(jwtFilter,UsernamePasswordAuthenticationFilter.class);
                 // .csrf(csrf -> csrf
                 //     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 // );
@@ -140,10 +145,10 @@ public class SecurityConfig{
     } 
 
     @Bean 
-    public AuthenticationManager authenticationManager(HttpSecurity http, DaoAuthenticationProvider provider) throws Exception{
-        AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authBuilder.authenticationProvider(provider);
-        return authBuilder.build();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+        AuthenticationManager auth = config.getAuthenticationManager();
+        return auth;
+        
     }
 }
 
