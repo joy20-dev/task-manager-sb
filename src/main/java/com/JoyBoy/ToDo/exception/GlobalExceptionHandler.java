@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex){
         return ResponseEntity
                 .badRequest()
-                .body(Map.of("message", ex.getMessage())); // use "message" key
+                .body(Map.of("message", ex.getMessage())); // 
     }
 
     @ExceptionHandler(RuntimeException.class)
