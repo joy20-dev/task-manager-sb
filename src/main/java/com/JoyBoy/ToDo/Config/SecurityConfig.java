@@ -49,8 +49,10 @@ public class SecurityConfig{
             http
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/favicon.ico").permitAll()
-                    .requestMatchers("/","/api/auth/**","/register.html","/css/**","/js/**","/h2-console/**","/h2-console").permitAll()
+                    // .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/favicon.ico").permitAll()
+                    // .requestMatchers("/","/api/auth/**","/register.html","/css/**","/js/**","/h2-console/**","/h2-console").permitAll()
+                    .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/favicon.ico","/h2-console/**").permitAll()
+                    .requestMatchers("/api/auth/**", "/api/register").permitAll()
                     .anyRequest().authenticated()
                 )
                 

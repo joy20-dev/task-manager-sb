@@ -3,20 +3,23 @@ package com.JoyBoy.ToDo.exception;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
-    public ResponseEntity<?> handleIllegallArgument (IllegalArgumentException ex){
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex){
         return ResponseEntity
                 .badRequest()
-                .body(Map.of("error",ex.getMessage()));
+                .body(Map.of("message", ex.getMessage())); // use "message" key
     }
 
-    public ResponseEntity<String> handleRunTimeException( RuntimeException ex){
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex){
         return ResponseEntity
                 .badRequest()
-                .body("something went wrong" + ex.getMessage());
+                .body(Map.of("message", "Something went wrong: " + ex.getMessage()));
     }
-    
 }

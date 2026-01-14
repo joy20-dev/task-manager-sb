@@ -21,7 +21,7 @@ import java.io.IOException;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final static String JWT_COOKIE_NAME ="JWT";
+    private final static String JWT_COOKIE_NAME ="jwt";
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtService jwtService;
@@ -43,7 +43,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (path.startsWith("/api/auth/") 
             || path.startsWith("/auth/") 
             || path.equals("/error")
-            || path.startsWith("/login")) {
+            || path.startsWith("/login")
+            ||path.startsWith("/h2-console")) {
             System.out.println("=== Skipping JWT validation for public endpoint");
             filterChain.doFilter(request, response);
             return;
@@ -61,7 +62,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 System.err.println("=== Error extracting username: " + e.getMessage());
                 e.printStackTrace();
             }
-        } else {
+        } 
+        else {
             System.out.println("=== No Bearer token found in request");
         }
 
