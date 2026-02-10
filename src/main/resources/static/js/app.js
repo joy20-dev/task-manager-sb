@@ -108,6 +108,9 @@ dropDown.addEventListener("change",()=>{
 async function fetchTasks(){
     const res = await fetch(apiUrl);
     const tasks = await res.json();
+    if (!tasks || tasks.length === 0) {
+        showNotification("No tasks available ",2000,"error");
+    } 
     renderTasks(tasks);
 }
 
@@ -115,6 +118,10 @@ async function fetchTasks(){
 async function completedTasks(){
     const res = await fetch("/api/tasks/completed");
     const tasks = await res.json();
+    if (!tasks || tasks.length === 0) {
+        showNotification("No completed tasks ",2000,"error");
+    }
+    
     renderTasks(tasks);
 }
 
@@ -122,6 +129,9 @@ async function completedTasks(){
 async function pendingTasks(){
     const res = await fetch("/api/tasks/pending");
     const tasks = await res.json();
+    if (!tasks || tasks.length === 0) {
+        showNotification("No pending tasks ",2000,"error");
+    }
     renderTasks(tasks);
 }
 

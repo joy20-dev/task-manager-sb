@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List; 
 import com.JoyBoy.ToDo.DTO.TaskDTO;
 import com.JoyBoy.ToDo.Models.User;
+import org.springframework.transaction.annotation.Transactional;
 
 
 
@@ -62,6 +63,7 @@ import com.JoyBoy.ToDo.Models.User;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 
 public class TaskService {
 
